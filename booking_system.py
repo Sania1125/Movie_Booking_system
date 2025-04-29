@@ -162,10 +162,28 @@ class BookingSystem:
 
     def handle_seat_booking(self):
         try:
-            seat_num = int(input("Enter seat number to book: "))
-            self.theater.book_seat(seat_num)
+            seat_nums = input("Enter seat numbers to book (comma-separated): ")
+            seat_nums = [int(num.strip()) for num in seat_nums.split(",")]
+            booked_count = 0
+
+            for seat_num in seat_nums:
+                if 0 < seat_num <= len(self.theater.seats):
+                    seat = self.theater.seats[seat_num - 1]
+                    if seat.book():
+                        print(f"Seat {seat_num} booked successfully!")
+                        booked_count += 1
+                    else:
+                        print(f"Seat {seat_num} is already booked.")
+                else:
+                    print(f"Invalid seat number: {seat_num}")
+
+            if booked_count > 1:
+                discount = 0.1  # 10% discount
+                print(f"Congratulations! You booked {booked_count} seats and received a 10% discount!")
+            elif booked_count == 0:
+                print("No seats were booked.")
         except ValueError:
-            print("Please enter a valid number.")
+            print("Please enter valid seat numbers.")
 
 
 # ----- Run the system -----
